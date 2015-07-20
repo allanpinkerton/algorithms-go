@@ -1,15 +1,15 @@
 package main
 
 import (
+	"allanpinkerton.com/algorithms/sorting"
 	"fmt"
-	"sorting"
 )
 
 func main() {
 	arrEmpty := make([]int, 0)
 	arr5 := []int{3, 1, 4, 2, 5}
-	InsertionSort(arrEmpty)
-	InsertionSort(arr5)
-	fmt.Printf("Empty array: %s", arrEmpty)
-	fmt.Printf("Array with 5 elements: %s", arr5)
+	sorting.InsertionSort(arrEmpty)
+	sorting.InsertionSort(arr5)
+	fmt.Printf("Empty array: %v \n", arrEmpty)
+	fmt.Printf("Array with 5 elements: %v \n", arr5)
 }
