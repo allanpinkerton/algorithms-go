@@ -19,7 +19,8 @@ func main() {
 		arr[i] = rand.Int()
 	}
 
-	f, _ := os.Create("integerArray")
+	filename := "integerArray" + strconv.Itoa(size)
+	f, _ := os.Create(filename)
 	defer f.Close()
 
 	for _, num := range arr {
@@ -27,5 +28,5 @@ func main() {
 	}
 	f.WriteString("\n")
 	f.Sync()
-	fmt.Printf("Array with " + strconv.Itoa(size) + " elements.\n")
+	fmt.Printf("Generated " + filename + " with " + strconv.Itoa(size) + " elements.\n")
 }
