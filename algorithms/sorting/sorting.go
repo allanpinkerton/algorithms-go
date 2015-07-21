@@ -1,11 +1,19 @@
 package sorting
 
+import (
+	"math/rand"
+)
+
 // General helper functions
 func swap(arr []int, a int, b int) {
 	temp := arr[a]
 	arr[a] = arr[b]
 	arr[b] = temp
 	return
+}
+
+func random(min, max int) int {
+	return rand.Intn(max+1-min) + min
 }
 
 // Performs basic insertion sort on slice
@@ -25,7 +33,7 @@ func InsertionSort(arr []int) {
 Quick Sort using last eleement as pivot
 */
 
-func partition(arr []int, p int, r int) (pivotPos int) {
+func partition(arr []int, p int, r int, pivot int) (pivotPos int) {
 	x := arr[r]
 	pivotPos = p - 1
 	for j := p; j < r; j++ {
@@ -41,7 +49,8 @@ func partition(arr []int, p int, r int) (pivotPos int) {
 
 func quickSortLastElementAux(arr []int, p int, r int) {
 	if p < r {
-		q := partition(arr, p, r)
+		pivot := r
+		q := partition(arr, p, r, pivot)
 		quickSortLastElementAux(arr, p, q-1)
 		quickSortLastElementAux(arr, q+1, r)
 	}
@@ -49,4 +58,17 @@ func quickSortLastElementAux(arr []int, p int, r int) {
 
 func QuickSortLastElement(arr []int) {
 	quickSortLastElementAux(arr, 0, len(arr)-1)
+}
+
+func quickSortRandomAux(arr []int, p int, r int) {
+	if p < r {
+		pivot := random(p, r)
+		q := partition(arr, p, r, pivot)
+		quickSortLastElementAux(arr, p, q-1)
+		quickSortLastElementAux(arr, q+1, r)
+	}
+}
+
+func QuickSortRandom(arr []int) {
+	quickSortRandomAux(arr, 0, len(arr)-1)
 }

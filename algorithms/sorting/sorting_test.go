@@ -30,7 +30,7 @@ func isSorted(arr []int) bool {
 	return true
 }
 
-func TestEmptyInsertionSort(t *testing.T) {
+func TestInsertionSort(t *testing.T) {
 	arrsCopy := make([][]int, len(arrs))
 	deepCopy(arrsCopy, arrs)
 
@@ -44,12 +44,26 @@ func TestEmptyInsertionSort(t *testing.T) {
 	}
 }
 
-func TestEmptyQuickSortFirstElement(t *testing.T) {
+func TestQuickSortLastElement(t *testing.T) {
 	arrsCopy := make([][]int, len(arrs))
 	deepCopy(arrsCopy, arrs)
 
 	for i, arr := range arrsCopy {
 		QuickSortLastElement(arr)
+		if !isSorted(arr) {
+			t.Error(
+				"Input:", arrs[i],
+				"Got:", arr)
+		}
+	}
+}
+
+func TestQuickSortRandom(t *testing.T) {
+	arrsCopy := make([][]int, len(arrs))
+	deepCopy(arrsCopy, arrs)
+
+	for i, arr := range arrsCopy {
+		QuickSortRandom(arr)
 		if !isSorted(arr) {
 			t.Error(
 				"Input:", arrs[i],
