@@ -12,10 +12,9 @@ import (
 )
 
 // Prints out the time elapsed since start
-func timeExecution(startTime time.Time, functionName string, inputSize int) {
+func timeExecution(startTime time.Time, functionName string, inputSize int) string {
 	executionTime := time.Since(startTime)
-	fmt.Printf("%s took %dms to sort %d elements\n", functionName, executionTime.Nanoseconds()/1000, inputSize)
-	return
+	return fmt.Sprintf("%-20s took %10.4fms to sort %d elements\n", functionName, float64(executionTime.Nanoseconds())/1000000, inputSize)
 }
 
 // Generates file with n random ints named integerArray + n
@@ -71,25 +70,38 @@ func main() {
 	}
 	size := os.Args[1]
 	sizeInt, err := strconv.Atoi(size)
+	checkError(err)
 
-	filename := "integerArray" + size
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		generateRandomIntegers(sizeInt, filename)
+	arr := make([]int, sizeInt)
+	for i := 0; i < sizeInt; i++ {
+		arr[i] = rand.Int()
 	}
-	f, err := os.Open(filename)
-	checkError(err)
+	fmt.Println("Generated " + size + " integers.")
 
-	defer f.Close()
-
-	arr, err := readInts(f)
-	checkError(err)
-
-	newArr := make([]int, len(arr))
+	mainChannel := make(chan string)
 	for k, v := range sortingFunctions {
+		newArr := make([]int, len(arr))
 		copy(newArr, arr)
-		start := time.Now()
-		v.(func([]int))(newArr)
-		timeExecution(start, k, len(newArr))
+		go func(name string, v interface{}) {
+			start := time.Now()
+			v.(func([]int))(newArr)
+			result := timeExecution(start, name, len(newArr))
+			mainChannel <- result
+		}(k, v)
+		fmt.Println("0")
 	}
+	fmt.Println("1")
+
+	fmt.Println("3")
+	for _ = range sortingFunctions {
+		fmt.Println("4")
+		select {
+		case result := <-mainChannel:
+			fmt.Printf(result)
+		case <-time.After(time.Second):
+			fmt.Println("5")
+		}
+	}
+
 	return
 }
