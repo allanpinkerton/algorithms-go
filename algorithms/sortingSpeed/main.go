@@ -7,6 +7,7 @@ import (
 	"io"
 	"math/rand"
 	"os"
+	"runtime"
 	"strconv"
 	"time"
 )
@@ -59,11 +60,22 @@ func checkError(err error) {
 
 func main() {
 
-	sortingFunctions := map[string]interface{}{
+	sortingFunctions := map[string]func([]int){
 		"InsertionSort":        sorting.InsertionSort,
 		"QuickSortLastElement": sorting.QuickSortLastElement,
 		"QuickSortRandom":      sorting.QuickSortRandom,
 	}
+
+	maxCPU := runtime.NumCPU()
+	maxProcs := runtime.GOMAXPROCS(0)
+
+	// Allow maximum concurrency
+	if maxCPU < maxProcs {
+		runtime.GOMAXPROCS(maxProcs)
+	} else {
+		runtime.GOMAXPROCS(maxCPU)
+	}
+
 	if len(os.Args) != 2 {
 		fmt.Printf("No size specified.\n")
 		return
@@ -79,27 +91,26 @@ func main() {
 	fmt.Println("Generated " + size + " integers.")
 
 	mainChannel := make(chan string)
+	defer close(mainChannel)
 	for k, v := range sortingFunctions {
-		newArr := make([]int, len(arr))
-		copy(newArr, arr)
-		go func(name string, v interface{}) {
+		//fmt.Println(arr)
+		go func(name string, v func([]int)) {
+			//fmt.Println("Starting ", name)
+			newArr := make([]int, len(arr))
+			copy(newArr, arr)
 			start := time.Now()
-			v.(func([]int))(newArr)
+			v(newArr)
 			result := timeExecution(start, name, len(newArr))
 			mainChannel <- result
 		}(k, v)
-		fmt.Println("0")
-	}
-	fmt.Println("1")
 
-	fmt.Println("3")
-	for _ = range sortingFunctions {
-		fmt.Println("4")
+	}
+	for range sortingFunctions {
 		select {
 		case result := <-mainChannel:
 			fmt.Printf(result)
-		case <-time.After(time.Second):
-			fmt.Println("5")
+		case <-time.After(2 * time.Second):
+			fmt.Println("Timeout")
 		}
 	}
 
