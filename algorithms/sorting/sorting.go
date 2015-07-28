@@ -72,3 +72,42 @@ func quickSortRandomAux(arr []int, p int, r int) {
 func QuickSortRandom(arr []int) {
 	quickSortRandomAux(arr, 0, len(arr)-1)
 }
+
+func maxHeapify(arr []int, i int, size int) {
+	var largest int
+	for {
+		l := (i+1)*2 - 1
+		r := l + 1
+		if l < size && arr[l] > arr[i] {
+			largest = l
+		} else {
+			largest = i
+		}
+		if r < size && arr[r] > arr[largest] {
+			largest = r
+		}
+		if largest != i {
+			swap(arr, i, largest)
+			i = largest
+		} else {
+			break
+		}
+	}
+}
+
+func buildMaxHeap(arr []int) {
+	size := len(arr)
+	for i := size / 2; i >= 0; i-- {
+		maxHeapify(arr, i, size)
+	}
+}
+
+func HeapSort(arr []int) {
+	buildMaxHeap(arr)
+	size := len(arr) - 1
+	for i := size; i > 0; i-- {
+		swap(arr, i, 0)
+		maxHeapify(arr, 0, size)
+		size--
+	}
+}
