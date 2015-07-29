@@ -1,6 +1,7 @@
 package sorting
 
 import (
+	"math"
 	"math/rand"
 )
 
@@ -110,4 +111,65 @@ func HeapSort(arr []int) {
 		maxHeapify(arr, 0, size)
 		size--
 	}
+}
+
+func merge(arr []int, p, q, r int) {
+	sizeLeft := q - p + 1
+	sizeRight := r - q
+	left := make([]int, sizeLeft+1)
+	right := make([]int, sizeRight+1)
+	for i := 0; i < sizeLeft; i++ {
+		left[i] = arr[p+i]
+	}
+	for i := 0; i < sizeRight; i++ {
+		right[i] = arr[q+i+1]
+	}
+	left[sizeLeft] = math.MaxInt32
+	right[sizeRight] = math.MaxInt32
+	i := 0
+	j := 0
+	for k := p; k <= r; k++ {
+		if left[i] <= right[j] {
+			arr[k] = left[i]
+			i++
+		} else {
+			arr[k] = right[j]
+			j++
+		}
+	}
+
+}
+
+func mergeSortAux(arr []int, p, r int) {
+	if p < r {
+		q := (p + r) / 2
+		mergeSortAux(arr, p, q)
+		mergeSortAux(arr, q+1, r)
+		merge(arr, p, q, r)
+	}
+}
+
+func MergeSort(arr []int) {
+	mergeSortAux(arr, 0, len(arr)-1)
+	return
+}
+
+func introSortAux(arr []int, maxDepth int) {
+	n := len(arr)
+	if n <= 1 {
+		return
+	}
+	if maxDepth == 0 {
+		HeapSort(arr)
+	} else {
+		pivot := random(0, len(arr))
+		q := partition(arr, 0, len(arr)-1, pivot)
+		introSortAux(arr[:q], maxDepth-1)
+		introSortAux(arr[q:], maxDepth-1)
+	}
+}
+
+func IntroSort(arr []int) {
+	maxDepth := int(math.Log(float64(len(arr)))) * 2
+	introSortAux(arr, maxDepth)
 }

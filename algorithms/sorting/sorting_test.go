@@ -13,6 +13,8 @@ var arrs = [][]int{
 	[]int{5, 4, 3, 2, 1},
 	[]int{1, 1, 1, 1, 1},
 	[]int{-3, 1, 8, 10, -9, -4},
+	[]int{23, 143, 231, 11, 1, 8, 16, 88, 9, 198, 44, 29, 12,
+		90, 86, 57, 55, 21, 71, 60, 27, 2, 128, 721, 333},
 }
 
 func deepCopy(dest [][]int, src [][]int) {
@@ -97,6 +99,7 @@ func TestBuildMaxHeap(t *testing.T) {
 		[]int{5, 4, 3, 2, 1},
 		[]int{1, 1, 1, 1, 1},
 		[]int{10, 1, 8, -3, -9, -4},
+		[]int{721, 198, 333, 88, 143, 231, 90, 57, 71, 60, 128, 29, 12, 16, 86, 11, 55, 21, 9, 1, 27, 2, 44, 23, 8},
 	}
 
 	for i, arr := range arrsCopy {
@@ -116,6 +119,34 @@ func TestHeapSort(t *testing.T) {
 
 	for i, arr := range arrsCopy {
 		HeapSort(arr)
+		if !isSorted(arr) {
+			t.Error(
+				"Input:", arrs[i],
+				"Got:", arr)
+		}
+	}
+}
+
+func TestMergeSort(t *testing.T) {
+	arrsCopy := make([][]int, len(arrs))
+	deepCopy(arrsCopy, arrs)
+
+	for i, arr := range arrsCopy {
+		MergeSort(arr)
+		if !isSorted(arr) {
+			t.Error(
+				"Input:", arrs[i],
+				"Got:", arr)
+		}
+	}
+}
+
+func TestIntroSort(t *testing.T) {
+	arrsCopy := make([][]int, len(arrs))
+	deepCopy(arrsCopy, arrs)
+
+	for i, arr := range arrsCopy {
+		IntroSort(arr)
 		if !isSorted(arr) {
 			t.Error(
 				"Input:", arrs[i],
