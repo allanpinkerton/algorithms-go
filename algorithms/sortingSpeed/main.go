@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"math"
 	"math/rand"
 	"os"
 	"runtime"
@@ -58,12 +59,17 @@ func checkError(err error) {
 	}
 }
 
+var INSERTIONSORT_MAX = 100000
+
 func main() {
 
 	sortingFunctions := map[string]func([]int){
 		"InsertionSort":        sorting.InsertionSort,
 		"QuickSortLastElement": sorting.QuickSortLastElement,
 		"QuickSortRandom":      sorting.QuickSortRandom,
+		"HeapSort":             sorting.HeapSort,
+		"MergeSort":            sorting.MergeSort,
+		"IntroSort":            sorting.IntroSort,
 	}
 
 	maxCPU := runtime.NumCPU()
@@ -86,9 +92,14 @@ func main() {
 
 	arr := make([]int, sizeInt)
 	for i := 0; i < sizeInt; i++ {
-		arr[i] = rand.Int()
+		arr[i] = rand.Intn(math.MaxInt32 - 1)
 	}
 	fmt.Println("Generated " + size + " integers.")
+
+	if sizeInt > INSERTIONSORT_MAX {
+		delete(sortingFunctions, "InsertionSort")
+		fmt.Println("Removed InsertionSort")
+	}
 
 	mainChannel := make(chan string)
 	defer close(mainChannel)
@@ -103,15 +114,13 @@ func main() {
 			result := timeExecution(start, name, len(newArr))
 			mainChannel <- result
 		}(k, v)
-
-	}
-	for range sortingFunctions {
 		select {
 		case result := <-mainChannel:
 			fmt.Printf(result)
-		case <-time.After(2 * time.Second):
-			fmt.Println("Timeout")
+		case <-time.After(5 * time.Second):
+			fmt.Println("Timeout for: " + k)
 		}
+
 	}
 
 	return

@@ -124,8 +124,8 @@ func merge(arr []int, p, q, r int) {
 	for i := 0; i < sizeRight; i++ {
 		right[i] = arr[q+i+1]
 	}
-	left[sizeLeft] = math.MaxInt32
-	right[sizeRight] = math.MaxInt32
+	left[sizeLeft] = math.MaxInt64
+	right[sizeRight] = math.MaxInt64
 	i := 0
 	j := 0
 	for k := p; k <= r; k++ {
