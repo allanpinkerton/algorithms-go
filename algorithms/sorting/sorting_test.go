@@ -72,33 +72,6 @@ func TestSorting(t *testing.T) {
 	}
 }
 
-func TestQuickSortLastElement(t *testing.T) {
-	arrsCopy := make([][]int, len(arrs))
-	deepCopy(arrsCopy, arrs)
-
-	for i, arr := range arrsCopy {
-		QuickSortLastElement(arr)
-		if !isSorted(arr) {
-			t.Error(
-				"Input:", arrs[i],
-				"Got:", arr)
-		}
-	}
-}
-
-func TestQuickSortRandom(t *testing.T) {
-	arrsCopy := make([][]int, len(arrs))
-	deepCopy(arrsCopy, arrs)
-
-	for i, arr := range arrsCopy {
-		QuickSortRandom(arr)
-		if !isSorted(arr) {
-			t.Error(
-				"Input:", arrs[i],
-				"Got:", arr)
-		}
-	}
-}
 
 func TestBuildMaxHeap(t *testing.T) {
 	arrsCopy := make([][]int, len(arrs))
@@ -121,48 +94,6 @@ func TestBuildMaxHeap(t *testing.T) {
 			t.Error(
 				"Input:", arrs[i],
 				"Expected:", heap[i],
-				"Got:", arr)
-		}
-	}
-}
-
-func TestHeapSort(t *testing.T) {
-	arrsCopy := make([][]int, len(arrs))
-	deepCopy(arrsCopy, arrs)
-
-	for i, arr := range arrsCopy {
-		HeapSort(arr)
-		if !isSorted(arr) {
-			t.Error(
-				"Input:", arrs[i],
-				"Got:", arr)
-		}
-	}
-}
-
-func TestMergeSort(t *testing.T) {
-	arrsCopy := make([][]int, len(arrs))
-	deepCopy(arrsCopy, arrs)
-
-	for i, arr := range arrsCopy {
-		MergeSort(arr)
-		if !isSorted(arr) {
-			t.Error(
-				"Input:", arrs[i],
-				"Got:", arr)
-		}
-	}
-}
-
-func TestIntroSort(t *testing.T) {
-	arrsCopy := make([][]int, len(arrs))
-	deepCopy(arrsCopy, arrs)
-
-	for i, arr := range arrsCopy {
-		IntroSort(arr)
-		if !isSorted(arr) {
-			t.Error(
-				"Input:", arrs[i],
 				"Got:", arr)
 		}
 	}
