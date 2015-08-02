@@ -17,6 +17,16 @@ var arrs = [][]int{
 		90, 86, 57, 55, 21, 71, 60, 27, 2, 128, 721, 333},
 }
 
+var sortingFuncs = map[string]func([]int){
+	"InsertionSort":        InsertionSort,
+	"QuickSortLastElement": QuickSortLastElement,
+	"QuickSortRandom":      QuickSortRandom,
+	"HeapSort":             HeapSort,
+	"MergeSort":            MergeSort,
+	"IntroSort":            IntroSort,
+	//"CountingSort":         CountingSort,
+}
+
 func deepCopy(dest [][]int, src [][]int) {
 	for i := range src {
 		dest[i] = make([]int, len(src[i]))
@@ -45,16 +55,19 @@ func isSorted(arr []int) bool {
 	return true
 }
 
-func TestInsertionSort(t *testing.T) {
-	arrsCopy := make([][]int, len(arrs))
-	deepCopy(arrsCopy, arrs)
+func TestSorting(t *testing.T) {
+	for k, v := range sortingFuncs {
+		arrsCopy := make([][]int, len(arrs))
+		deepCopy(arrsCopy, arrs)
 
-	for i, arr := range arrsCopy {
-		InsertionSort(arr)
-		if !isSorted(arr) {
-			t.Error(
-				"Input:", arrs[i],
-				"Got:", arr)
+		for i, arr := range arrsCopy {
+			v(arr)
+			if !isSorted(arr) {
+				t.Error(
+					"Error running", k,
+					"Input:", arrs[i],
+					"Got:", arr)
+			}
 		}
 	}
 }

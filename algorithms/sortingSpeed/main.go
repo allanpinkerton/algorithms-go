@@ -70,6 +70,7 @@ func main() {
 		"HeapSort":             sorting.HeapSort,
 		"MergeSort":            sorting.MergeSort,
 		"IntroSort":            sorting.IntroSort,
+		"CountingSort":         sorting.CountingSort,
 	}
 
 	maxCPU := runtime.NumCPU()
@@ -104,9 +105,7 @@ func main() {
 	mainChannel := make(chan string)
 	defer close(mainChannel)
 	for k, v := range sortingFunctions {
-		//fmt.Println(arr)
 		go func(name string, v func([]int)) {
-			//fmt.Println("Starting ", name)
 			newArr := make([]int, len(arr))
 			copy(newArr, arr)
 			start := time.Now()

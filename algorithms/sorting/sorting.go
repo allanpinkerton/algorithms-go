@@ -17,6 +17,20 @@ func random(min, max int) int {
 	return rand.Intn(max+1-min) + min
 }
 
+func findMax(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+
+	currentMax := arr[0]
+	for _, value := range arr {
+		if value > currentMax {
+			currentMax = value
+		}
+	}
+	return currentMax
+}
+
 // Performs basic insertion sort on slice
 
 func InsertionSort(arr []int) {
@@ -172,4 +186,25 @@ func introSortAux(arr []int, maxDepth int) {
 func IntroSort(arr []int) {
 	maxDepth := int(math.Log(float64(len(arr)))) * 2
 	introSortAux(arr, maxDepth)
+}
+
+func countingSortAux(arr, sorted []int, maxElem int) {
+	tmp := make([]int, maxElem+1)
+	for _, value := range arr {
+		tmp[value] = tmp[value] + 1
+	}
+	for i := 1; i < maxElem; i++ {
+		tmp[i] += tmp[i-1]
+	}
+	for i := len(arr) - 1; i >= 0; i++ {
+		sorted[tmp[arr[i]]] = arr[i]
+		tmp[arr[i]]--
+	}
+	return
+}
+
+func CountingSort(arr []int) {
+	tmp := make([]int, len(arr))
+	countingSortAux(arr, tmp, findMax(arr))
+	copy(arr, tmp)
 }
